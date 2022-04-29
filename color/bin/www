@@ -1,0 +1,184 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('color:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+//WebSocketのサーバのライブラリを読み込む
+var WebSocketServer = require("ws").Server;
+const { checkServerIdentity } = require('tls');
+
+//WebSocketサーバを生成
+var wss = new WebSocketServer({server:server});
+
+//バイナリモードをテキストに変換
+var text_decoder = new TextDecoder("utf-8");
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+
+//接続中のクライアント情報を保持する配列
+var client = [];
+//攻撃ターンの内容を文字する配列
+var attack_li = [];
+
+//WebSocketクライアントが接続すると
+//wssに”connection”イベントが発生
+//その時に呼び出す関数を決める
+if (client.length < 3){
+  wss.on("connection", on_connection);
+}else{
+  console.log("参加できません");
+}
+
+//クライアントの接続があった
+function on_connection(ws){
+	console.log("established websocket connection.");
+
+	//クライアントからデータを受信すると
+	//wsに"message"イベントが発生する
+	//その時に呼び出される関数を決める
+	ws.on("message", on_message);
+
+  //切断された時に呼び出される関数を決める
+  ws.on("close", on_close);
+
+  //接続中のクライアントの情報を配列に格納する
+  client.push(ws);
+
+  //何番目のクライアントか知らせる
+  var len = client.length;
+  var cl_count = len;
+  client[len-1].send(cl_count);
+  console.log(cl_count);
+
+  //クライアントが二人揃ったら対戦開始
+  if(client.length === 2){
+    client[0].send('True');
+  }
+}
+
+//データを受信した
+//引数は受信データ
+function on_message(data){
+	var str = text_decoder.decode(Uint8Array.from(data).buffer);
+  var p_num  = Number(str.substr(5, 1));
+  var attack_turn = str.substr(0, 4);
+
+  if(attack_turn === 'atta'){
+    if(attack_li.length === 0){
+      attack_li.push(data);
+    }else if(attack_li.length !== 0 && p_num === 1){
+      attack_li.unshift(data);
+      client[0].send(attack_li[1]);
+      client[1].send(attack_li[0]);
+      attack_li = [];
+    }else if(attack_li.length !== 0 && p_num === 2){
+      attack_li.push(data);
+      client[0].send(attack_li[1]);
+      client[1].send(attack_li[0]);
+      attack_li = [];
+    }
+  }else{
+    for(var i=0 ; i<client.length ; i++){
+      var dest = client[i];
+      if(!!dest){
+        dest.send(data);
+      }
+    }
+  }
+}
+
+//切断された
+function on_close(){
+  //切断したクライアントを管理配列から除外
+  for(var i=0 ; i<client.length ; i++){
+    if(this === client[i]){
+      client.splice(i, 1);
+      return;
+    }
+  }
+}

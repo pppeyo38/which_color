@@ -1,0 +1,359 @@
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: #1C1C1C;
+  color: #ffffff;
+}
+
+@font-face{
+  font-family: "PixelMPlus10 Bold";
+  src: url(../fonts/PixelMplus10-Bold.ttf);
+}
+
+@font-face{
+  font-family: "PixelMPlus10 Regular";
+  src: url(../fonts/PixelMplus10-Regular.ttf);
+}
+
+section{
+  height: 100vh;
+  width: 100vw;
+}
+
+/* スタート画面 */
+#display_start{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#display_start h1{
+  font-family: "PixelMPlus10 Regular";
+  font-size: 62px;
+}
+
+#con_wait{
+  position: absolute;
+}
+
+#con_wait.delete{
+  display: none;
+}
+
+#start_button{
+  display: none;
+}
+
+#start_button.visible{
+  display: block;
+}
+
+#display_start.delete{
+  display: none;
+}
+
+#music_button{
+  position: absolute;
+  bottom: 0;
+  align-self: end;
+  padding-bottom: 2%;
+  padding-right: 2%;
+}
+
+/* 名前入力画面 */
+#display_name{
+  display: none;
+}
+
+#display_name.visible{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#display_name.visible h2{
+  font-family: "PixelMPlus10 Regular";
+}
+
+form{
+  text-align: center;
+}
+
+/* キャラクター選択画面 */
+section.display_char{
+  display: none;
+}
+
+.display_char.visible{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.display_char.visible h2{
+  font-family: "PixelMPlus10 Regular";
+}
+
+.character_icon{
+  display: flex;
+  padding: 3vh 0;
+}
+
+.cicon_D, .cicon_B{
+  padding: 0 2vw;
+}
+
+
+/* ゲーム画面 */
+section.display_game{
+  display: none;
+}
+
+.display_game.visible{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.display_top{
+  font-family: "PixelMPlus10 Regular";
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 15vh;
+  /* margin-bottom: 15px; */
+}
+
+.player1, .player2{
+  font-size: 24px;
+  width: 40vw;
+  padding: 0 5vw;
+  display: flex;
+  flex-direction: column;
+}
+
+#player1_name, #player2_name{
+  padding-bottom: 3%;
+}
+
+#player2_name, #player2_life_wrapper{
+  align-self: end;
+}
+
+#player1_life_wrapper, #player2_life_wrapper{
+  display: flex;
+}
+
+.count_turn{
+  font-size: 30px;
+  width: 20vw;
+  padding-bottom: 2vw;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.count_rectangle{
+  width: 5vw;
+  height: 5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(../images/count_rectangle.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main_game{
+  width: 100vw;
+  height: 70vh;
+  background-image: url(../images/background.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.avatar{
+  display: flex;
+  justify-content: space-around;
+  align-items: end;
+  padding-bottom: 50px;
+}
+
+.avatar_wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.books_icon_wrapper{
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 15vh;
+}
+
+#game_result{
+  align-self: center;
+}
+
+.lower-1, .lower-2, .lower-3, .lower-4, .lower-5{
+  opacity: 0;
+  width: 5vh;
+}
+
+.lower-1.onclick, .lower-2.onclick, .lower-3.onclick,
+.lower-4.onclick, .lower-5.onclick{
+  opacity: 1;
+}
+
+.books_icon_items{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  padding: 0 10px;
+}
+
+#item-decide-button{
+  display: none;
+}
+
+.item-decide{
+  display: flex;
+  align-items: center;
+}
+
+#item-decide-button.decide{
+  display: block;
+  position: absolute;
+  padding-top: 5vh;
+  right: -11vw;
+}
+
+.display_bottom {
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.command-img{
+  width: 298px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(../images/command.png);
+  background-repeat: no-repeat;
+}
+
+#commandtext{
+  font-family: "PixelMPlus10 Regular";
+  color: #1C1C1C;
+}
+
+
+
+/* 攻撃ターンのcss */
+.my_icon.R1, .opp_icon.R1{
+  filter: drop-shadow(
+    0px 0px 5px rgb(250, 220, 100)
+  );
+}
+.my_icon.R2, .opp_icon.R2{
+  filter: drop-shadow(
+    0px 0px 5px rgba(230, 150, 50, 0.8)
+  );
+}
+.my_icon.R3, .opp_icon.R3{
+  filter: drop-shadow(
+    0px 0px 5px rgba(220, 50, 50, 0.6)
+  );
+}
+.my_icon.G1, .opp_icon.G1{
+  filter: drop-shadow(
+    0px 0px 5px rgb(100, 250, 220)
+  );
+}
+.my_icon.G2, .opp_icon.G2{
+  filter: drop-shadow(
+    0px 0px 5px rgba(50, 230, 150, 0.8)
+  );
+}
+.my_icon.G3, .opp_icon.G3{
+  filter: drop-shadow(
+    0px 0px 5px rgba(50, 220, 50, 0.6)
+  );
+}
+.my_icon.B1, .opp_icon.B1{
+  filter: drop-shadow(
+    0px 0px 5px rgb(220, 100, 250)
+  );
+}
+.my_icon.B2, .opp_icon.B2{
+  filter: drop-shadow(
+    0px 0px 5px rgba(150, 50, 230, 0.8)
+  );
+}
+.my_icon.B3, .opp_icon.B3{
+  filter: drop-shadow(
+    0px 0px 5px rgba(50, 50, 220, 0.6)
+  );
+}
+
+.my_icon.DR1, .opp_icon.DR1{
+  filter: drop-shadow(
+    0px 0px 5px rgb(70, 10, 10)
+  );
+}
+.my_icon.DR2, .opp_icon.DR2{
+  filter: drop-shadow(
+    0px 0px 5px rgba(90, 50, 15, 0.8)
+  );
+}
+.my_icon.DR3, .opp_icon.DR3{
+  filter: drop-shadow(
+    0px 0px 5px rgba(120, 90, 20, 0.6)
+  );
+}
+.my_icon.DG1, .opp_icon.DG1{
+  filter: drop-shadow(
+    0px 0px 5px rgb(10, 70, 10)
+  );
+}
+.my_icon.DG2, .opp_icon.DG2{
+  filter: drop-shadow(
+    0px 0px 5px rgba(15, 90, 50, 0.8)
+  );
+}
+.my_icon.DG3, .opp_icon.DG3{
+  filter: drop-shadow(
+    0px 0px 5px rgba(20, 120, 90, 0.6)
+  );
+}
+.my_icon.DB1, .opp_icon.DB1{
+  filter: drop-shadow(
+    0px 0px 5px rgb(10, 10, 70)
+  );
+}
+.my_icon.DB2, .opp_icon.DB2{
+  filter: drop-shadow(
+    0px 0px 5px rgba(50, 15, 90, 0.8)
+  );
+}
+.my_icon.DB3, .opp_icon.DB3{
+  filter: drop-shadow(
+    0px 0px 5px rgba(90, 20, 120, 0.6)
+  );
+}
